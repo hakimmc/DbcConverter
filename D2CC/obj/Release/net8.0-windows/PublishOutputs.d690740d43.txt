@@ -1,0 +1,6 @@
+C:\Users\acalg\source\repos\D2CC\D2CC\bin\Release\net8.0-windows\publish\D2CC_Gen\D2CC.exe
+C:\Users\acalg\source\repos\D2CC\D2CC\bin\Release\net8.0-windows\publish\D2CC_Gen\D2CC.dll
+C:\Users\acalg\source\repos\D2CC\D2CC\bin\Release\net8.0-windows\publish\D2CC_Gen\D2CC.deps.json
+C:\Users\acalg\source\repos\D2CC\D2CC\bin\Release\net8.0-windows\publish\D2CC_Gen\D2CC.runtimeconfig.json
+C:\Users\acalg\source\repos\D2CC\D2CC\bin\Release\net8.0-windows\publish\D2CC_Gen\D2CC.pdb
+C:\Users\acalg\source\repos\D2CC\D2CC\bin\Release\net8.0-windows\publish\D2CC_Gen\DbcParserLib.dll

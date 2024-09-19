@@ -1,0 +1,6 @@
+C:\Users\acalg\OneDrive\Masaüstü\D2CC_Gen\D2CC.exe
+C:\Users\acalg\OneDrive\Masaüstü\D2CC_Gen\D2CC.dll
+C:\Users\acalg\OneDrive\Masaüstü\D2CC_Gen\D2CC.deps.json
+C:\Users\acalg\OneDrive\Masaüstü\D2CC_Gen\D2CC.runtimeconfig.json
+C:\Users\acalg\OneDrive\Masaüstü\D2CC_Gen\D2CC.pdb
+C:\Users\acalg\OneDrive\Masaüstü\D2CC_Gen\DbcParserLib.dll
