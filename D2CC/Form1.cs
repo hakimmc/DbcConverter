@@ -50,77 +50,6 @@ namespace D2CC
             return "\n/* " + text + " Line End */\n\n";
         }
 
-        private string make_h_file(string filePath)
-        {
-            string main_msg = string.Empty;
-            var dbc = Parser.ParseFromPath(filePath);
-            main_msg += "/*\r\n * d2cc_lib.h\r\n *\r\n *  Created on: " + DateTime.Now.Date.ToString().TrimEnd('0', ':') + "\r\n *      Author: hakimmc\r\n */\n\n";
-            main_msg += "#ifndef LIB_\r\n#define LIB_\r\n\r\n#include <stdint.h>\r\n#include <stdbool.h>\n\n";
-            foreach (var msg in dbc.Messages)
-            {
-                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-                main_msg += start_line_msg(msg.Name) + "\nstruct{\n";
-                main_msg += "\tuint32_t ID;\n";// = 0x" + msg.ID.ToString("X") + ";\n";
-                main_msg += "\tuint8_t DLC;\n";// = " + msg.DLC + ";\n";
-                /*main_msg += "\tenum Value{";
-                int value_indx = 0;
-                foreach (var sig in sortedSignals)
-                {
-                    string valuemap = string.Join("\n", sig.ValueTableMap);
-                    MessageBox.Show("\n" + sig.ValueTableMap[1].ToString() +":"+sig.ValueTableMap[1][0].ToString());
-                }*/
-                main_msg += "\tunion{\n";
-                main_msg += "\t\tuint8_t Message[" + msg.DLC + "];\n";
-                main_msg += "\t\tstruct{\n";
-                /*Algorithm 0*/
-                if (alg_index == 0)
-                {
-                    foreach (var sig in sortedSignals)
-                    {
- 
-                        main_msg += "\t\t\tuint64_t " + sig.Name + ":" + sig.Length + ";\n";
-                        //dtSignals.Rows.Add("0x" + sig.ID.ToString("X"), sig.Name, sig.StartBit, sig.Length, sig.ByteOrder, sig.ValueType, sig.InitialValue, sig.Factor, sig.Offset, sig.Minimum, sig.Maximum, sig.Unit, valueTableString, sig.Comment);
-
-                    }
-                    main_msg += "\t\t}Bits;\n";
-                    main_msg += "\t}Data;\n";
-                    main_msg += "}" + msg.Name + ";\n" + end_line_msg(msg.Name);
-                }
-                else
-                {
-                    foreach (var sig in sortedSignals)
-                    {
-                        
-                        main_msg += "\t\t\tuint64_t " + sig.Name + ":" + sig.Length + ";\n";
-                        //dtSignals.Rows.Add("0x" + sig.ID.ToString("X"), sig.Name, sig.StartBit, sig.Length, sig.ByteOrder, sig.ValueType, sig.InitialValue, sig.Factor, sig.Offset, sig.Minimum, sig.Maximum, sig.Unit, valueTableString, sig.Comment);
-
-                    }
-                    main_msg += "\t\t}Bits;\n";
-                    main_msg += "\t}Data;\n";
-                    main_msg += "}" + msg.Name + ";\n" + end_line_msg(msg.Name);
-                }
-            }
-
-            main_msg += "\nvoid D2cc_Lib_Init();//Init Function (Must Be Run)\n#endif";
-            return main_msg;
-        }
-
-        private string make_c_file(string filePath)
-        {
-            string main_msg = string.Empty;
-            var dbc = Parser.ParseFromPath(filePath);
-            main_msg += "#include \"d2cc_lib.h\"\n\n";
-            main_msg += "void D2cc_Lib_Init(){\n";
-            foreach (var msg in dbc.Messages)
-            {
-                main_msg += "\t" + msg.Name + ".ID = 0x" + msg.ID.ToString("X") + ";\n";
-                main_msg += "\t" + msg.Name + ".DLC = " + msg.DLC.ToString() + ";\n";
-            }
-            main_msg += "}\n\n";
-
-            return main_msg;
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             button1.Enabled = false;
@@ -181,17 +110,14 @@ namespace D2CC
             var sortedmsgs = dbc.Messages.OrderBy(messages => messages.Name);
             foreach (var msg in sortedmsgs)
             {
-                main_msg += start_line_msg(msg.Name);
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-
-
                 foreach (var sig in sortedSignals)
                 {
                     int elementOfMap = string.Join("\n", sig.ValueTableMap).Split(',').Length;
                     int index_counter = 1;
                     int enum_counter = 0;
                     var sortedtable = sig.ValueTableMap.OrderBy(tab => tab.Key);
-                    if(string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
+                    if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
                         main_msg += "\ntypedef enum{\n";
                     }
@@ -217,90 +143,73 @@ namespace D2CC
                     {
                         main_msg += "\n}" + sig.Name + "_enum;\n\n";
                     }
-                    //MessageBox.Show(main_msg);
                 }
-                main_msg += "struct " + msg.Name + "{\n";
-                main_msg += "\tuint32_t ID;\n";// = 0x" + msg.ID.ToString("X") + ";\n";
-                main_msg += "\tuint8_t DLC;\n";// = " + msg.DLC + ";\n";
+            }
+            main_msg += "typedef struct{\n";
+
+            foreach (var msg in sortedmsgs)
+            {
+                main_msg += start_line_msg(msg.Name);
+                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
                 main_msg += "\tstruct{\n";
+                main_msg += "\t\tuint32_t ID;\n";// = 0x" + msg.ID.ToString("X") + ";\n";
+                main_msg += "\t\tuint8_t DLC;\n";// = " + msg.DLC + ";\n";
+                main_msg += "\t\tstruct{\n";
                 foreach (var sig in sortedSignals)
                 {
                     if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
-                        main_msg += "\t\t"+sig.Name+"_enum " + sig.Name + "; //" + sig.Length + " bit\n";
+                        main_msg += "\t\t\t" + sig.Name+"_enum " + sig.Name + "; //" + sig.Length + " bit\n";
                     }
                     else
                     {
                         if (sig.Length <= 8)
                         {
-                            main_msg += "\t\tuint8_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\tuint8_t " + sig.Name + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 16)
                         {
-                            main_msg += "\t\tuint16_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\tuint16_t " + sig.Name + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 32)
                         {
-                            main_msg += "\t\tuint32_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\tuint32_t " + sig.Name + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 64)
                         {
-                            main_msg += "\t\tuint64_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\tuint64_t " + sig.Name + "; //" + sig.Length + " bit\n";
                         }
                     }
 
                 }
-                main_msg += "\t}Signal;\n";
+                main_msg += "\t\t}Signal;\n";
 
                 foreach (var sig in sortedSignals)
                 {
                     if(sig.Factor != 1 || sig.Offset != 0)
                     {
-                        main_msg += "\tstruct{\n";
                         main_msg += "\t\tstruct{\n";
-                        main_msg += "\t\t\tfloat factor;\n";// + sig.Factor+"\n";
-                        main_msg += "\t\t\tint offset;\n";// + sig.Offset + "\n";
-                        main_msg += "\t\t\tfloat value;\n";
-                        main_msg += "\t\t}" + sig.Name+";\n";
-                        main_msg += "\t}Phys_Value;\n";
+                        main_msg += "\t\t\tstruct{\n";
+                        main_msg += "\t\t\t\tfloat factor;\n";// + sig.Factor+"\n";
+                        main_msg += "\t\t\t\tint offset;\n";// + sig.Offset + "\n";
+                        main_msg += "\t\t\t\tfloat value;\n";
+                        main_msg += "\t\t\t}Phys_Value;\n";
+                        main_msg += "\t\t}"+sig.Name+";\n";
                     }
                 }
+                
 
-                main_msg += "};\n" + end_line_msg(msg.Name);
+                main_msg += "\t}" + msg.Name + ";\n" + end_line_msg(msg.Name);
             }
+            main_msg += "}DbcStruct;\n"; ;
             main_msg += "/*     USER CODE FUNCTION BLOCK START       */\n";
 
             
             UInt16 indx= 0;
 
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $"\nvoid D2cc_Lib_Init(struct {msg.Name} *st{++indx}";
-                break;
-            }
+            main_msg += $"\nvoid D2cc_Lib_Init(struct DbcStruct *st); //Init Function (Must Be Run)\n";
 
-            foreach (var msg in sortedmsgs)
-            {
-                indx++;
-                main_msg += $",\n\t\tstruct {msg.Name} *st{indx}";
-            }
-            main_msg += "); //Init Function (Must Be Run)\n";
-
-
-
-            indx = 0;
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, struct {msg.Name} *st{++indx}";
-                break;
-            }
-            
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $",\n\t\tstruct {msg.Name} *st{++indx}";
-            }
-
-            main_msg += "); //Can Read & Parse Function\n";
+            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, struct DbcStruct *st); //Can Read & Parse Function\n";
             main_msg += "\n/*     USER CODE FUNCTION BLOCK STOP        */\n\n";
             main_msg += "#endif";
             return main_msg;
@@ -316,55 +225,36 @@ namespace D2CC
 
             UInt16 indx = 0;
 
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $"\nvoid D2cc_Lib_Init(struct {msg.Name} *st{++indx}";
-                break;
-            }
-
-            foreach (var msg in sortedmsgs)
-            {
-                indx++;
-                main_msg += $", struct {msg.Name} *st{indx}";
-            }
-            main_msg += "){";
+            main_msg += "\nvoid D2cc_Lib_Init(DbcStruct *dbc){\n";
 
             foreach (var msg in sortedmsgs)
             {
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-                main_msg += "\t" + msg.Name + "->ID\t=\t0x" + msg.ID.ToString("X") + ";\n";
-                main_msg += "\t" + msg.Name + "->DLC\t=\t" + msg.DLC.ToString() + ";\n";
+                main_msg += "\tdbc->" + msg.Name + ".ID\t=\t0x" + msg.ID.ToString("X") + ";\n";
+                main_msg += "\tdbc->" + msg.Name + ".DLC\t=\t" + msg.DLC.ToString() + ";\n";
                 foreach (var sig in sortedSignals)
                 {
                     if (sig.Factor != 1 || sig.Offset != 0)
                     {
-                        main_msg += "\t"+msg.Name+ ".Phys_Value."+sig.Name+ ".factor\t\t=\t" + sig.Factor+";\n";
-                        main_msg += "\t" + msg.Name + ".Phys_Value." + sig.Name + ".offset\t\t=\t" + sig.Offset+";\n";
+                        main_msg += "\tdbc->" + msg.Name+ "." + sig.Name + ".Phys_Value.factor\t=\t" + sig.Factor+";\n";
+                        main_msg += "\tdbc->" + msg.Name + "." + sig.Name + ".Phys_Value.offset\t=\t" + sig.Offset+";\n";
                     }
                 }
             }
             main_msg += "}\n\n";
 
             indx = 0;
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, struct {msg.Name} *st{++indx}";
-                break;
-            }
+            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, DbcStruct *dbc)";
 
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $",\n\t\tstruct {msg.Name} *st{++indx}";
-            }
 
-            main_msg += "){\r\n    switch (id) {\n\n";
+            main_msg += "{\r\n    switch (id) {\n\n";
             foreach (var msg in sortedmsgs)
             {
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
                 main_msg += "\tcase 0x" + msg.ID.ToString("X") + ":\n";
                 foreach (var sig in sortedSignals)
                 {
-                    main_msg += "\t\t"+msg.Name + ".Signal." + sig.Name    +"\t\t=\t";
+                    main_msg += "\t\tdbc->"+msg.Name + ".Signal." + sig.Name    + "\t=\t";
                     int hex_bitwise = find_bitcount_to_maxvalue(sig.Length);
                     if (sig.Length < 8)
                     {
@@ -431,7 +321,7 @@ namespace D2CC
                 {
                     if (sig.Factor != 1 || sig.Offset != 0)
                     {
-                        main_msg += "\t\t" + msg.Name + ".Phys_Value.value\t\t=\t(" + msg.Name+".Signal."+sig.Name+" * "+sig.Factor+") + "+sig.Offset+";\n";
+                        main_msg += "\t\tdbc->" + msg.Name + "." +sig.Name+ ".Phys_Value.value\t=\t(dbc->" + msg.Name+".Signal."+sig.Name+" * "+sig.Factor+") + "+sig.Offset+";\n";
                     }
                 }
                 main_msg += "\t\tbreak;\n";

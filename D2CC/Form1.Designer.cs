@@ -73,7 +73,7 @@
             // 
             // AddDbcFile_Button
             // 
-            AddDbcFile_Button.Location = new Point(-2, 0);
+            AddDbcFile_Button.Location = new Point(3, 0);
             AddDbcFile_Button.Name = "AddDbcFile_Button";
             AddDbcFile_Button.Size = new Size(251, 23);
             AddDbcFile_Button.TabIndex = 3;
@@ -83,9 +83,9 @@
             // 
             // button1
             // 
-            button1.Location = new Point(12, 107);
+            button1.Location = new Point(15, 107);
             button1.Name = "button1";
-            button1.Size = new Size(116, 23);
+            button1.Size = new Size(115, 23);
             button1.TabIndex = 6;
             button1.Text = "Save .h file";
             button1.UseVisualStyleBackColor = true;
@@ -93,11 +93,11 @@
             // 
             // button2
             // 
-            button2.Location = new Point(147, 107);
+            button2.Location = new Point(156, 107);
             button2.Name = "button2";
-            button2.Size = new Size(114, 23);
+            button2.Size = new Size(113, 23);
             button2.TabIndex = 7;
-            button2.Text = "Create C file";
+            button2.Text = "Save .c file";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -109,18 +109,18 @@
             // 
             label1.AutoSize = true;
             label1.ForeColor = SystemColors.ControlLightLight;
-            label1.Location = new Point(37, 5);
+            label1.Location = new Point(12, 5);
             label1.Name = "label1";
-            label1.Size = new Size(206, 15);
+            label1.Size = new Size(148, 15);
             label1.TabIndex = 8;
-            label1.Text = "CanDb++ To C/Cpp Library Converter";
+            label1.Text = "Dbc To C Library Converter";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaptionText;
-            ClientSize = new Size(274, 142);
+            ClientSize = new Size(275, 140);
             Controls.Add(label1);
             Controls.Add(button2);
             Controls.Add(button1);
