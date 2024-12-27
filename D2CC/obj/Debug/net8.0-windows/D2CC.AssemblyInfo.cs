@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("D2CC")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45228ba0705b900d4469741fa29b866b8fa5c506")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4f3b8550b4b14eba1956a17305fd557b17ae50b9")]
 [assembly: System.Reflection.AssemblyProductAttribute("D2CC")]
 [assembly: System.Reflection.AssemblyTitleAttribute("D2CC")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DbcParserLib;
 using DbcParserLib.Model;
@@ -127,7 +129,7 @@ namespace D2CC
                         string[] value = new string[2];
                         value[0] = item.ToString().TrimStart().TrimEnd().Substring(1, item.ToString().Length - 2).Split(',')[0];
                         value[1] = item.ToString().TrimStart().TrimEnd().Substring(1, item.ToString().Length - 2).Split(',')[1];
-                        main_msg += "\t" + sig.Name.TrimEnd() + "_" + value[1].TrimStart();
+                        main_msg += "\t" + fix_string(sig.Name.TrimEnd() + "_" + value[1].TrimStart());
                         if (enum_counter != Convert.ToInt32(value[0]))
                         {
                             main_msg += " = 0x" + Convert.ToInt32(value[0].TrimStart()).ToString("X");
@@ -207,9 +209,9 @@ namespace D2CC
             
             UInt16 indx= 0;
 
-            main_msg += $"\nvoid D2cc_Lib_Init(struct DbcStruct *st); //Init Function (Must Be Run)\n";
+            main_msg += $"\nvoid D2cc_Lib_Init(DbcStruct *st); //Init Function (Must Be Run)\n";
 
-            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, struct DbcStruct *st); //Can Read & Parse Function\n";
+            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, DbcStruct *st); //Can Read & Parse Function\n";
             main_msg += "\n/*     USER CODE FUNCTION BLOCK STOP        */\n\n";
             main_msg += "#endif";
             return main_msg;
@@ -353,6 +355,11 @@ namespace D2CC
             if (48 < lengthbit && lengthbit < 57) { rx_data_index = 6; return "rx_data[6]"; }
             if (56 < lengthbit && lengthbit < 65) { rx_data_index = 7; return "rx_data[7]"; }
             return null;
+        }
+
+        public string fix_string(string word)
+        {
+            return word.Replace("@", "").Replace("/", "_").Replace(".", "_").Replace("-", "_").Replace("?", "").Replace(" ","_");
         }
     }
 }
