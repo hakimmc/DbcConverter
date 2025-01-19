@@ -107,9 +107,34 @@ namespace D2CC
         {
             string main_msg = string.Empty;
             var dbc = Parser.ParseFromPath(filePath);
-            main_msg += "/*\r\n *  d2cc_lib.h\r\n *\r\n *  Created on: " + DateTime.Now.Date.ToString().TrimEnd('0', ':') + "\r\n *  Author: hakimmc\r\n *\n *  https://www.linkedin.com/in/abdulhakim-calgin/\r\n *\n */\n\n";
+            main_msg += "/**\n" +
+            " * @file d2cc_lib.h\n" +
+            " * @brief Header file for the D2CC library.\n" +
+            " * \n" +
+            " * @date " + DateTime.Now.Date.ToString("yyyy-MM-dd") + "\n" +
+            " * @author hakimmc\n" +
+            " * @see https://www.linkedin.com/in/abdulhakim-calgin/\n" +
+            " */\n\n";
+
             main_msg += "#ifndef LIB_\r\n#define LIB_\r\n\r\n#include <stdint.h>\r\n#include <stdbool.h>\n\n";
+
             var sortedmsgs = dbc.Messages.OrderBy(messages => messages.Name);
+
+            main_msg += $"\n" +
+                   $"/** \r\n * @def READ_ENABLE\r\n * @brief If you want to use Readparse function, uncomment it!\r\n */\r\n//#define READ_ENABLE" +
+                   $"\n";
+
+            foreach (var msg in sortedmsgs)
+            {
+                main_msg += $"\n" +
+                    $"/** \r\n * @def {msg.Name}_ID\r\n * @brief CAN ID for {msg.Name} messages.\r\n */\r\n#define {msg.Name}_ID \t {msg.ID}" +
+                    $"\n";
+
+                main_msg += $"\n" +
+                    $"/** \r\n * @def {msg.Name}_DLC\r\n * @brief CAN DLC for {msg.Name} messages.\r\n */\r\n#define {msg.Name}_DLC \t {msg.DLC}" +
+                    $"\n";
+            }
+
             foreach (var msg in sortedmsgs)
             {
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
@@ -119,71 +144,110 @@ namespace D2CC
                     int index_counter = 1;
                     int enum_counter = 0;
                     var sortedtable = sig.ValueTableMap.OrderBy(tab => tab.Key);
+
                     if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
                         main_msg += "\ntypedef enum{\n";
+                        // Add Doxygen comment for the enum
+                        main_msg += "/** \n";
+                        main_msg += " * @enum " + sig.Name + "_enum\n";
+                        main_msg += " * @brief Enum for representing signal values for the " + sig.Name + " signal.\n";
+                        main_msg += " * \n";
+                        main_msg += " * This enum maps each value in the signal's value table to a corresponding identifier.\n";
+                        main_msg += " * It is used to interpret the raw data received from the CAN bus and provides human-readable names for each value.\n";
+                        main_msg += " * \n";
+                        main_msg += " * @note Ensure the signal values are aligned with the data type and expected range of the signal.\n";
+                        main_msg += " */\n";
                     }
+
                     foreach (var item in sortedtable)
                     {
                         index_counter++;
                         string[] value = new string[2];
                         value[0] = item.ToString().TrimStart().TrimEnd().Substring(1, item.ToString().Length - 2).Split(',')[0];
                         value[1] = item.ToString().TrimStart().TrimEnd().Substring(1, item.ToString().Length - 2).Split(',')[1];
+
+                        // Doxygen comment for the enum value
+                        main_msg += "\t/** @brief " + value[1].TrimStart() + " */\n"; // Brief description of the enum value
                         main_msg += "\t" + fix_string(sig.Name.TrimEnd() + "_" + value[1].TrimStart());
+
                         if (enum_counter != Convert.ToInt32(value[0]))
                         {
                             main_msg += " = 0x" + Convert.ToInt32(value[0].TrimStart()).ToString("X");
                             enum_counter = Convert.ToInt32(value[0]);
                         }
+
                         enum_counter++;
                         if (index_counter != elementOfMap)
                         {
                             main_msg += ",";
                         }
                     }
+
                     if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
                         main_msg += "\n}" + sig.Name + "_enum;\n\n";
                     }
                 }
             }
+
+            main_msg += "/** \n";
+            main_msg += " * @brief factor, offset and value variable structer for CAN messages structure for message.\n";
+            main_msg += " * \n";
+            main_msg += " * This structure including factor, offset and value variables.\n";
+            main_msg += " */\n";
+            main_msg += "typedef struct {\r\n    float factor;\r\n    int offset;\r\n    float value;\r\n} Phys_Value_t;\n\n";
+
             main_msg += "typedef struct{\n";
 
             foreach (var msg in sortedmsgs)
             {
+                // Doxygen comment for each message structure
+                main_msg += "/** \n";
+                main_msg += " * @brief CAN message structure for message " + msg.Name + ".\n";
+                main_msg += " * \n";
+                main_msg += " * This structure represents the CAN message, including the signals and their values.\n";
+                main_msg += " */\n";
                 main_msg += start_line_msg(msg.Name);
+
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
                 main_msg += "\tstruct{\n";
-                main_msg += "\t\tuint32_t ID;\n";// = 0x" + msg.ID.ToString("X") + ";\n";
-                main_msg += "\t\tuint8_t DLC;\n";// = " + msg.DLC + ";\n";
+
+                // Union for signal values
                 main_msg += "\t\tunion{\n";
                 main_msg += "\t\t\tstruct{\n";
                 foreach (var sig in sortedSignals)
                 {
+                    // Doxygen comment for each signal field
                     if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
-                        main_msg += "\t\t\t\t" + sig.Name+"_enum " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                        main_msg += "\t\t\t\t/** @brief Signal " + sig.Name + " enum type. */\n";
+                        main_msg += "\t\t\t\t" + sig.Name + "_enum " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                     }
                     else
                     {
+                        // Doxygen comment for different data types based on signal length
                         if (sig.Length <= 8)
                         {
-                            main_msg += "\t\t\t\tuint8_t " + sig.Name + ":"+ sig.Length + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 8-bit length. */\n";
+                            main_msg += "\t\t\t\tuint8_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 16)
                         {
+                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 16-bit length. */\n";
                             main_msg += "\t\t\t\tuint16_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 32)
                         {
+                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 32-bit length. */\n";
                             main_msg += "\t\t\t\tuint32_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 64)
                         {
+                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 64-bit length. */\n";
                             main_msg += "\t\t\t\tuint64_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                     }
-
                 }
                 main_msg += "\t\t\t}Signal;\n";
                 main_msg += $"\t\t\tuint8_t Data[{msg.DLC}];\n";
@@ -191,36 +255,96 @@ namespace D2CC
 
                 foreach (var sig in sortedSignals)
                 {
-                    if(sig.Factor != 1 || sig.Offset != 0)
+                    if (sig.Factor != 1 || sig.Offset != 0)
                     {
+                        // Doxygen comment for physical value structure
+                        main_msg += "\t\t/** @brief Factor for scaling the raw signal value. */\n";
                         main_msg += "\t\tstruct{\n";
-                        main_msg += "\t\t\tstruct{\n";
-                        main_msg += "\t\t\t\tfloat factor;\n";// + sig.Factor+"\n";
-                        main_msg += "\t\t\t\tint offset;\n";// + sig.Offset + "\n";
-                        main_msg += "\t\t\t\tfloat value;\n";
-                        main_msg += "\t\t\t}Phys_Value;\n";
-                        main_msg += "\t\t}"+sig.Name+";\n";
+                        main_msg += "\t\t\tPhys_Value_t Phys_Value;\n";// + sig.Factor+"\n";
+                        main_msg += "\t\t}" + sig.Name + ";\n";
                     }
                 }
-                
 
+                // End Doxygen comment for message structure
                 main_msg += "\t}" + msg.Name + ";\n" + end_line_msg(msg.Name);
             }
-            main_msg += "}DbcStruct;\n"; ;
+
+            // End Doxygen comment for the main structure
+            main_msg += "}DbcStruct;\n";
             main_msg += "/*     USER CODE FUNCTION BLOCK START       */\n";
 
             
             UInt16 indx= 0;
 
+            main_msg += $"\n/**\n";
+            main_msg += " * @brief Initializes the DbcStruct for CAN message processing.\n";
+            main_msg += " *\n";
+            main_msg += " * This function should be called before using the DbcStruct to ensure that all\n";
+            main_msg += " * message structures are properly initialized. It sets up necessary memory and \n";
+            main_msg += " * configurations.\n";
+            main_msg += " *\n";
+            main_msg += " * @param[in] st Pointer to the DbcStruct instance that will be initialized.\n";
+            main_msg += " */\n";
             main_msg += $"\nvoid D2cc_Lib_Init(DbcStruct *st); //Init Function (Must Be Run)\n";
 
+            main_msg += $"\n#ifdef READ_ENABLE\n";
+            main_msg += $"/**\n";
+            main_msg += " * @brief Reads and parses CAN data.\n";
+            main_msg += " *\n";
+            main_msg += " * This function reads CAN data from the provided `rx_data` and parses it into the \n";
+            main_msg += " * corresponding message and signal structures in the DbcStruct. It uses the CAN \n";
+            main_msg += " * message ID to identify the message to parse.\n";
+            main_msg += " *\n";
+            main_msg += " * This function is only enabled if `READ_ENABLE` is defined.\n";
+            main_msg += " *\n";
+            main_msg += " * @param[in] rx_data Pointer to the received CAN data.\n";
+            main_msg += " * @param[in] id The CAN message ID that is used to determine which message to parse.\n";
+            main_msg += " * @param[in,out] st Pointer to the DbcStruct instance where the parsed data will be stored.\n";
+            main_msg += " */\n";
             main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, DbcStruct *st); //Can Read & Parse Function\n";
+            main_msg += $"\n#endif\n";
 
             foreach (var msg in sortedmsgs)
             {
+                main_msg += $"\n/**\n";
+                main_msg += " * @brief Creates the signal table for the specified CAN message.\n";
+                main_msg += " *\n";
+                main_msg += " * This function initializes the signal table for the given CAN message. It \n";
+                main_msg += " * organizes and prepares the signals in the message to be ready for processing \n";
+                main_msg += " * or encoding.\n";
+                main_msg += " *\n";
+                main_msg += " * @param[in] dbc Pointer to the DbcStruct instance that contains the CAN message.\n";
+                main_msg += " */\n";
                 main_msg += $"\nvoid CreateTable_{msg.Name}(DbcStruct *dbc);\n";
             }
 
+            main_msg += $"\n/**\n";
+            main_msg += " * @brief Converts a physical value to its corresponding raw CAN value.\n";
+            main_msg += " *\n";
+            main_msg += " * This function takes a physical value and applies the scaling factor and offset \n";
+            main_msg += " * specified in the `Phys_Value_t` structure to convert it to the raw CAN signal value.\n";
+            main_msg += " * The raw value can then be transmitted in a CAN message.\n";
+            main_msg += " *\n";
+            main_msg += " * @param[in] phys_value The physical value to be converted.\n";
+            main_msg += " * @param[in] phys_struct Pointer to the `Phys_Value_t` structure containing scaling and offset information.\n";
+            main_msg += " *\n";
+            main_msg += " * @return The corresponding raw CAN value.\n";
+            main_msg += " */\n";
+            main_msg += "\r\nuint32_t PHYS_TO_RAW(int phys_value, Phys_Value_t *phys_struct);\r\n";
+
+            main_msg += $"\n/**\n";
+            main_msg += " * @brief Converts a raw CAN value to its corresponding physical value.\n";
+            main_msg += " *\n";
+            main_msg += " * This function takes a raw CAN value and applies the scaling factor and offset \n";
+            main_msg += " * specified in the `Phys_Value_t` structure to convert it to the physical signal value.\n";
+            main_msg += " * The physical value represents the actual measured or calculated value of the signal.\n";
+            main_msg += " *\n";
+            main_msg += " * @param[in] raw_value The raw CAN signal value to be converted.\n";
+            main_msg += " * @param[in] phys_struct Pointer to the `Phys_Value_t` structure containing scaling and offset information.\n";
+            main_msg += " *\n";
+            main_msg += " * @return The corresponding physical value.\n";
+            main_msg += " */\n";
+            main_msg += "\r\nuint32_t RAW_TO_PHYS(int raw_value, Phys_Value_t *phys_struct);\r\n";
 
 
             main_msg += "\n/*     USER CODE FUNCTION BLOCK STOP        */\n\n";
@@ -229,71 +353,127 @@ namespace D2CC
         }
 
         private string make_c_file2(string filePath)
-        {
-            string main_msg = string.Empty;
-            var dbc = Parser.ParseFromPath(filePath);
-            main_msg += "/*\r\n *  d2cc_lib.c\r\n *\r\n *  Created on: " + DateTime.Now.Date.ToString().TrimEnd('0', ':') + "\r\n *  Author: hakimmc\r\n *\n *  https://www.linkedin.com/in/abdulhakim-calgin/\r\n *\n */\n\n";
+{
+    string main_msg = string.Empty;
+    var dbc = Parser.ParseFromPath(filePath);
+
+
+    main_msg += "/**\n" +
+        " * @file d2cc_lib.c\n" +
+        " * @brief Source file for the D2CC library.\n" +
+        " * \n" +
+        " * @date " + DateTime.Now.Date.ToString("yyyy-MM-dd") + "\n" +
+        " * @author hakimmc\n" +
+        " * @see https://www.linkedin.com/in/abdulhakim-calgin/\n" +
+        " */\n\n";
+            //main_msg += "/*\r\n *  d2cc_lib.c\r\n *\r\n *  Created on: " + DateTime.Now.Date.ToString().TrimEnd('0', ':') + "\r\n *  Author: hakimmc\r\n *\n *  https://www.linkedin.com/in/abdulhakim-calgin/\r\n *\n */\n\n";
             main_msg += "#include \"d2cc_lib.h\"\n\n";
-            var sortedmsgs = dbc.Messages.OrderBy(messages => messages.Name);
+    
+    var sortedmsgs = dbc.Messages.OrderBy(messages => messages.Name);
 
-            UInt16 indx = 0;
+    UInt16 indx = 0;
 
-            main_msg += "\nvoid D2cc_Lib_Init(DbcStruct *dbc){\n";
+    main_msg += "\n/**\r\n * @brief Initializes the DbcStruct with values from the parsed DBC file.\r\n"
+                + " *\r\n"
+                + " * This function initializes the necessary fields in the DbcStruct based on the provided DBC messages.\r\n"
+                + " * The signals' physical factors and offsets are set accordingly.\r\n"
+                + " *\r\n"
+                + " * @param[in] dbc Pointer to the DbcStruct instance to be initialized.\r\n"
+                + " */\n";
+    main_msg += "\nvoid D2cc_Lib_Init(DbcStruct *dbc){\n";
 
-            foreach (var msg in sortedmsgs)
+    foreach (var msg in sortedmsgs)
+    {
+        var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
+        main_msg += "\n";
+        foreach (var sig in sortedSignals)
+        {
+            if (sig.Factor != 1 || sig.Offset != 0)
             {
-                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-                main_msg += "\tdbc->" + msg.Name + ".ID\t=\t0x" + msg.ID.ToString("X") + ";\n";
-                main_msg += "\tdbc->" + msg.Name + ".DLC\t=\t" + msg.DLC.ToString() + ";\n";
-                foreach (var sig in sortedSignals)
-                {
-                    if (sig.Factor != 1 || sig.Offset != 0)
-                    {
-                        main_msg += "\tdbc->" + msg.Name+ "." + sig.Name + ".Phys_Value.factor\t=\t" + sig.Factor+";\n";
-                        main_msg += "\tdbc->" + msg.Name + "." + sig.Name + ".Phys_Value.offset\t=\t" + sig.Offset+";\n";
-                    }
-                }
+                main_msg += "\tdbc->" + msg.Name+ "." + sig.Name + ".Phys_Value.factor\t=\t" + sig.Factor+";\n";
+                main_msg += "\tdbc->" + msg.Name + "." + sig.Name + ".Phys_Value.offset\t=\t" + sig.Offset+";\n";
             }
-            main_msg += "}\n\n";
-
-            indx = 0;
-            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, DbcStruct *dbc)";
-
-
-            main_msg += "{\r\n    switch (id) {\n\n";
-            foreach (var msg in sortedmsgs)
-            {
-                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-                main_msg += "\tcase 0x" + msg.ID.ToString("X") + ":\n";
-                main_msg += "\t\tfor(int i=0;i<" + msg.DLC + ";i++){\n" +
-                    "\t\t\tdbc->" + msg.Name + ".Data[i] = rx_data[i];\n\t\t}\n";
-                foreach (var sig in sortedSignals)
-                {
-                    if (sig.Factor != 1 || sig.Offset != 0)
-                    {
-                        main_msg += "\t\tdbc->" + msg.Name + "." +sig.Name+ ".Phys_Value.value\t=\t(dbc->" + msg.Name+".Signal."+sig.Name+" * "+sig.Factor+") + "+sig.Offset+";\n";
-                    }
-                }
-                main_msg += "\t\tbreak;\n";
-            }
-            main_msg += "\t}\n}\n";
-
-            foreach (var msg in sortedmsgs)
-            {
-                main_msg += $"\nvoid CreateTable_{msg.Name}(DbcStruct *dbc)\n";
-                main_msg += "{\n";
-                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-                foreach (var sig in sortedSignals)
-                {
-
-                    main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = 0;\n";
-                }
-                main_msg += "\n}";
-
-            }
-            
-            return main_msg;
         }
+    }
+    main_msg += "}\n\n";
+
+    indx = 0;
+
+    main_msg += "\n/**\r\n * @brief Reads and parses CAN data into the DbcStruct.\r\n"
+                + " *\r\n"
+                + " * This function is used to read CAN data and store it in the DbcStruct. It parses the data and converts\r\n"
+                + " * physical values to raw CAN signal values based on the scaling factors and offsets defined in the DbcStruct.\r\n"
+                + " *\r\n"
+                + " * @param[in] rx_data Pointer to the received CAN data to be parsed.\r\n"
+                + " * @param[in] id CAN message ID for identifying which message to parse.\r\n"
+                + " * @param[in,out] dbc Pointer to the DbcStruct where parsed data will be stored.\r\n"
+                + " */\n";
+    main_msg += $"\n#ifdef READ_ENABLE\nvoid ReadParse(uint8_t* rx_data, uint32_t id, DbcStruct *dbc)";
+
+    main_msg += "{\r\n    switch (id) {\n\n";
+    foreach (var msg in sortedmsgs)
+    {
+        var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
+        main_msg += "\tcase 0x" + msg.ID.ToString("X") + ":\n";
+        main_msg += "\t\tfor(int i=0;i<" + msg.DLC + ";i++){\n" +
+            "\t\t\tdbc->" + msg.Name + ".Data[i] = rx_data[i];\n\t\t}\n";
+        foreach (var sig in sortedSignals)
+        {
+            if (sig.Factor != 1 || sig.Offset != 0)
+            {
+                main_msg += "\t\tdbc->" + msg.Name + "." +sig.Name+ ".Phys_Value.value\t=\t(dbc->" + msg.Name+".Signal."+sig.Name+" * "+sig.Factor+") + "+sig.Offset+";\n";
+            }
+        }
+        main_msg += "\t\tbreak;\n";
+    }
+    main_msg += "\t}\n}\n#endif";
+
+    main_msg += "\n/**\r\n * @brief Creates the signal table for a specified CAN message in the DbcStruct.\r\n"
+                + " *\r\n"
+                + " * This function initializes the signal table for a specific message within the DbcStruct. Each signal is \r\n"
+                + " * set to 0 initially, preparing it for further use.\r\n"
+                + " *\r\n"
+                + " * @param[in] dbc Pointer to the DbcStruct containing the CAN message and signals.\r\n"
+                + " */\n";
+    foreach (var msg in sortedmsgs)
+    {
+        main_msg += $"\nvoid CreateTable_{msg.Name}(DbcStruct *dbc)\n";
+        main_msg += "{\n";
+        var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
+        foreach (var sig in sortedSignals)
+        {
+            main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = 0;\n";
+        }
+        main_msg += "\n}";
+    }
+
+    main_msg += "\n/**\r\n * @brief Converts a physical value to a raw CAN signal value.\r\n"
+                + " *\r\n"
+                + " * This function converts a physical value (e.g., temperature) into a raw CAN signal value based on the \r\n"
+                + " * scaling factor and offset stored in the Phys_Value_t structure.\r\n"
+                + " *\r\n"
+                + " * @param[in] phys_value The physical value to convert.\r\n"
+                + " * @param[in] phys_struct Pointer to the Phys_Value_t structure containing scaling factor and offset.\r\n"
+                + " *\r\n"
+                + " * @return The corresponding raw CAN signal value.\r\n"
+                + " */\n";
+    main_msg += "\nuint32_t PHYS_TO_RAW(int phys_value, Phys_Value_t *phys_struct) \r\n{\r\n    return ((phys_value - phys_struct->offset) / phys_struct->factor);\r\n}\n";
+
+    main_msg += "\n/**\r\n * @brief Converts a raw CAN signal value to a physical value.\r\n"
+                + " *\r\n"
+                + " * This function converts a raw CAN signal value to its corresponding physical value based on the \r\n"
+                + " * scaling factor and offset stored in the Phys_Value_t structure.\r\n"
+                + " *\r\n"
+                + " * @param[in] raw_value The raw CAN signal value to convert.\r\n"
+                + " * @param[in] phys_struct Pointer to the Phys_Value_t structure containing scaling factor and offset.\r\n"
+                + " *\r\n"
+                + " * @return The corresponding physical value.\r\n"
+                + " */\n";
+    main_msg += "\nuint32_t RAW_TO_PHYS(int raw_value, Phys_Value_t *phys_struct) \r\n{\r\n    return ((raw_value * phys_struct->factor) + phys_struct->offset);\r\n}";
+
+    return main_msg;
+}
+
 
         private int find_bitcount_to_maxvalue(int bitcount)
         {
