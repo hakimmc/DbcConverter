@@ -36,23 +36,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\fvzdr\\.nuget\\packages\\": {},
+    "C:\\Users\\acalg\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\vs\\DbcConverter\\D2CC\\D2CC.csproj",
+      "projectUniqueName": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\DbcConverter\\D2CC\\D2CC.csproj",
       "projectName": "D2CC",
-      "projectPath": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\vs\\DbcConverter\\D2CC\\D2CC.csproj",
-      "packagesPath": "C:\\Users\\fvzdr\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\vs\\DbcConverter\\D2CC\\obj\\",
+      "projectPath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\DbcConverter\\D2CC\\D2CC.csproj",
+      "packagesPath": "C:\\Users\\acalg\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\DbcConverter\\D2CC\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\fvzdr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\acalg\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -73,11 +73,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -108,7 +103,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

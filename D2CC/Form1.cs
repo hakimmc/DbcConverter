@@ -156,35 +156,38 @@ namespace D2CC
                 main_msg += "\tstruct{\n";
                 main_msg += "\t\tuint32_t ID;\n";// = 0x" + msg.ID.ToString("X") + ";\n";
                 main_msg += "\t\tuint8_t DLC;\n";// = " + msg.DLC + ";\n";
-                main_msg += "\t\tstruct{\n";
+                main_msg += "\t\tunion{\n";
+                main_msg += "\t\t\tstruct{\n";
                 foreach (var sig in sortedSignals)
                 {
                     if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
-                        main_msg += "\t\t\t" + sig.Name+"_enum " + sig.Name + "; //" + sig.Length + " bit\n";
+                        main_msg += "\t\t\t\t" + sig.Name+"_enum " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                     }
                     else
                     {
                         if (sig.Length <= 8)
                         {
-                            main_msg += "\t\t\tuint8_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint8_t " + sig.Name + ":"+ sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 16)
                         {
-                            main_msg += "\t\t\tuint16_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint16_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 32)
                         {
-                            main_msg += "\t\t\tuint32_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint32_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 64)
                         {
-                            main_msg += "\t\t\tuint64_t " + sig.Name + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint64_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                     }
 
                 }
-                main_msg += "\t\t}Signal;\n";
+                main_msg += "\t\t\t}Signal;\n";
+                main_msg += $"\t\t\tuint8_t Data[{msg.DLC}];\n";
+                main_msg += "\t\t};\n";
 
                 foreach (var sig in sortedSignals)
                 {
@@ -212,6 +215,14 @@ namespace D2CC
             main_msg += $"\nvoid D2cc_Lib_Init(DbcStruct *st); //Init Function (Must Be Run)\n";
 
             main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, DbcStruct *st); //Can Read & Parse Function\n";
+
+            foreach (var msg in sortedmsgs)
+            {
+                main_msg += $"\nvoid CreateTable_{msg.Name}(DbcStruct *dbc);\n";
+            }
+
+
+
             main_msg += "\n/*     USER CODE FUNCTION BLOCK STOP        */\n\n";
             main_msg += "#endif";
             return main_msg;
@@ -254,71 +265,8 @@ namespace D2CC
             {
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
                 main_msg += "\tcase 0x" + msg.ID.ToString("X") + ":\n";
-                foreach (var sig in sortedSignals)
-                {
-                    main_msg += "\t\tdbc->"+msg.Name + ".Signal." + sig.Name    + "\t=\t";
-                    int hex_bitwise = find_bitcount_to_maxvalue(sig.Length);
-                    if (sig.Length < 8)
-                    {
-                        //ANDLENMESI GEREKEN TEK BYTELAR
-                        if (hex_bitwise < 0xFF)
-                        {
-                            main_msg += "(" + get_rxdataindex(sig.Length + sig.StartBit);
-                            main_msg += " & (0x" + hex_bitwise.ToString("X");
-                            main_msg += "<<" + (sig.StartBit - rx_data_index * 8) + "))>>" + (sig.StartBit - rx_data_index * 8) + ";\n";
-                        }
-                    }
-                    else
-                    {
-                        // ANDLENMESI GEREKMEYEN TEK BYTELAR
-                        if (sig.Length == 8)
-                        {
-                            main_msg += "(" + get_rxdataindex(sig.Length + sig.StartBit);
-                            main_msg += ");\n";
-                        }
-
-                        // ORLANMASI VE ANDLENMESI GEREKEN BYTELAR
-                        else
-                        {
-
-                            //STARTBITI 0DAN BASLAMAYAN BYTELAR
-                            if(sig.StartBit%8 != 0)
-                            {
-                                //YAZILACAK
-                                //MessageBox.Show(sig.Name);
-                            }
-                            else
-                            {
-
-                            int msg_len = sig.Length;
-                            int wise_count = sig.Length - sig.Length%8;
-                            hex_bitwise = sig.Length%8 == 0 ? 0xFF : find_bitcount_to_maxvalue(sig.Length%8);
-                                
-                                while (true)
-                                {
-                                    hex_bitwise = find_bitcount_to_maxvalue(msg_len % 8==0?8: msg_len % 8); //+(sig.StartBit%8));
-                                    main_msg += "(((" + get_rxdataindex(msg_len) + ") & (0x" + hex_bitwise.ToString("X") + "))<<" + rx_data_index*8+")";
-                                    //wise_count -= 8;
-                                    msg_len = (rx_data_index) * 8;
-                                    //MessageBox.Show(wise_count + "__" + hex_bitwise);
-                                    if (wise_count < 0)
-                                    {
-                                        break;
-                                    }
-                                    if (msg_len > 0)
-                                    {
-                                        main_msg += " | ";
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
-                            main_msg += ";\n";
-                        }
-                    }
-                }
+                main_msg += "\t\tfor(int i=0;i<" + msg.DLC + ";i++){\n" +
+                    "\t\t\tdbc->" + msg.Name + ".Data[i] = rx_data[i];\n\t\t}\n";
                 foreach (var sig in sortedSignals)
                 {
                     if (sig.Factor != 1 || sig.Offset != 0)
@@ -328,8 +276,22 @@ namespace D2CC
                 }
                 main_msg += "\t\tbreak;\n";
             }
-            main_msg += "\t}\n}";
+            main_msg += "\t}\n}\n";
 
+            foreach (var msg in sortedmsgs)
+            {
+                main_msg += $"\nvoid CreateTable_{msg.Name}(DbcStruct *dbc)\n";
+                main_msg += "{\n";
+                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
+                foreach (var sig in sortedSignals)
+                {
+
+                    main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = 0;\n";
+                }
+                main_msg += "\n}";
+
+            }
+            
             return main_msg;
         }
 
