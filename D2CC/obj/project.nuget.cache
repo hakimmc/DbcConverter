@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "gUz6dvGWENfKmvdg4x8hJJ5yJcr9gx45N2aRFIOU5FOyA2iYTh6eqjXlRuzZtHUrjwvx5j+BV/tu6QoMz8Egtg==",
+  "dgSpecHash": "edgLnIEywfk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\acalg\\OneDrive\\Belgeler\\GitHub\\DbcConverter\\D2CC\\D2CC.csproj",
+  "projectFilePath": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\D2CC.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\acalg\\.nuget\\packages\\dbcparserlib\\1.5.0\\dbcparserlib.1.5.0.nupkg.sha512"
+    "C:\\Users\\fvzdr\\.nuget\\packages\\dbcparserlib\\1.5.0\\dbcparserlib.1.5.0.nupkg.sha512"
   ],
   "logs": []
 }

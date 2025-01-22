@@ -385,7 +385,6 @@ namespace D2CC
     foreach (var msg in sortedmsgs)
     {
         var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-        main_msg += "\n";
         foreach (var sig in sortedSignals)
         {
             if (sig.Factor != 1 || sig.Offset != 0)
@@ -414,14 +413,15 @@ namespace D2CC
     foreach (var msg in sortedmsgs)
     {
         var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
-        main_msg += "\tcase 0x" + msg.ID.ToString("X") + ":\n";
+        //main_msg += "\tcase 0x" + msg.ID.ToString("X") + ":\n";
+        main_msg += "\tcase " + msg.Name+ "_ID :\n";
         main_msg += "\t\tfor(int i=0;i<" + msg.DLC + ";i++){\n" +
-            "\t\t\tdbc->" + msg.Name + ".Data[i] = rx_data[i];\n\t\t}\n";
+        "\t\t\tdbc->" + msg.Name + ".Data[i] = rx_data[i];\n\t\t}\n";
         foreach (var sig in sortedSignals)
         {
             if (sig.Factor != 1 || sig.Offset != 0)
             {
-                main_msg += "\t\tdbc->" + msg.Name + "." +sig.Name+ ".Phys_Value.value\t=\t(dbc->" + msg.Name+".Signal."+sig.Name+" * "+sig.Factor+") + "+sig.Offset+";\n";
+                main_msg += "\t\tdbc->" + msg.Name + "." +sig.Name+ ".Phys_Value.value\t=\t(dbc->"+ msg.Name + ".Signal." + sig.Name+" * "+sig.Factor+") + "+sig.Offset+";\n";
             }
         }
         main_msg += "\t\tbreak;\n";
@@ -442,7 +442,7 @@ namespace D2CC
         var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
         foreach (var sig in sortedSignals)
         {
-            main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = 0;\n";
+            main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = PHYS_TO_RAW(0,&dbc->"+ msg.Name+"."+sig.Name+".Phys_Value);\n";
         }
         main_msg += "\n}";
     }
