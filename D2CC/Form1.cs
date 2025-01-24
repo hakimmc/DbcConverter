@@ -105,6 +105,7 @@ namespace D2CC
         }
         private string make_h_file2(string filePath)
         {
+            string[] sigcom;
             string main_msg = string.Empty;
             var dbc = Parser.ParseFromPath(filePath);
             main_msg += "/**\n" +
@@ -205,8 +206,10 @@ namespace D2CC
                 // Doxygen comment for each message structure
                 main_msg += "/** \n";
                 main_msg += " * @brief CAN message structure for message " + msg.Name + ".\n";
-                main_msg += " * \n";
-                main_msg += " * This structure represents the CAN message, including the signals and their values.\n";
+                if (msg.Comment.Length > 0)
+                {
+                    main_msg += $" * {msg.Comment}\n";
+                }
                 main_msg += " */\n";
                 main_msg += start_line_msg(msg.Name);
 
@@ -221,7 +224,17 @@ namespace D2CC
                     // Doxygen comment for each signal field
                     if (string.Join("\n", sig.ValueTableMap).Trim() != string.Empty)
                     {
-                        main_msg += "\t\t\t\t/** @brief Signal " + sig.Name + " enum type. */\n";
+                        main_msg += "\t\t\t\t/** \n";
+                        main_msg += "\t\t\t\t * @brief Signal " + sig.Name + " enum type.\n";
+                        sigcom = sig.Comment.Split('\n');
+                        if (sig.Comment.Length > 0)
+                        {
+                            for (int i = 0; i < sigcom.Count(); i++)
+                            {
+                                main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                            }
+                        }
+                        main_msg += "\t\t\t\t */\n";
                         main_msg += "\t\t\t\t" + sig.Name + "_enum " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                     }
                     else
@@ -229,22 +242,62 @@ namespace D2CC
                         // Doxygen comment for different data types based on signal length
                         if (sig.Length <= 8)
                         {
-                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 8-bit length. */\n";
+                            main_msg += "\t\t\t\t/**\n";
+                            main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 8-bit length.\n";
+                            sigcom = sig.Comment.Split('\n');
+                            if (sig.Comment.Length > 0)
+                            {
+                                for (int i = 0; i < sigcom.Count(); i++)
+                                {
+                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                }
+                            }
+                            main_msg += "\t\t\t\t */\n";
                             main_msg += "\t\t\t\tuint8_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 16)
                         {
-                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 16-bit length. */\n";
+                            main_msg += "\t\t\t\t/** \n";
+                            main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 16-bit length.\n";
+                            sigcom = sig.Comment.Split('\n');
+                            if (sig.Comment.Length > 0)
+                            {
+                                for (int i = 0; i < sigcom.Count(); i++)
+                                {
+                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                }
+                            }
+                            main_msg += "\t\t\t\t */\n";
                             main_msg += "\t\t\t\tuint16_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 32)
                         {
-                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 32-bit length. */\n";
+                            main_msg += "\t\t\t\t/** \n";
+                            main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 32-bit length.\n";
+                            sigcom = sig.Comment.Split('\n');
+                            if (sig.Comment.Length > 0)
+                            {
+                                for (int i = 0; i < sigcom.Count(); i++)
+                                {
+                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                }
+                            }
+                            main_msg += "\t\t\t\t */\n";
                             main_msg += "\t\t\t\tuint32_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 64)
                         {
-                            main_msg += "\t\t\t\t/** @brief " + sig.Name + " signal with 64-bit length. */\n";
+                            main_msg += "\t\t\t\t/** \n";
+                            main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 64-bit length.\n";
+                            sigcom = sig.Comment.Split('\n');
+                            if (sig.Comment.Length > 0)
+                            {
+                                for (int i = 0; i < sigcom.Count(); i++)
+                                {
+                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                }
+                            }
+                            main_msg += "\t\t\t\t */\n";
                             main_msg += "\t\t\t\tuint64_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
                         }
                     }
