@@ -206,10 +206,18 @@ namespace D2CC
                 // Doxygen comment for each message structure
                 main_msg += "/** \n";
                 main_msg += " * @brief CAN message structure for message " + msg.Name + ".\n";
-                if (msg.Comment.Length > 0)
+                try
                 {
-                    main_msg += $" * {msg.Comment}\n";
+                    if (msg.Comment != null)
+                    {
+                        main_msg += $" * {msg.Comment}\n";
+                    }
+                    else
+                    {
+                    }
                 }
+                catch { }
+                
                 main_msg += " */\n";
                 main_msg += start_line_msg(msg.Name);
 
@@ -226,12 +234,15 @@ namespace D2CC
                     {
                         main_msg += "\t\t\t\t/** \n";
                         main_msg += "\t\t\t\t * @brief Signal " + sig.Name + " enum type.\n";
-                        sigcom = sig.Comment.Split('\n');
-                        if (sig.Comment.Length > 0)
+                        if (sig.Comment != null)
                         {
-                            for (int i = 0; i < sigcom.Count(); i++)
+                            sigcom = sig.Comment.Split('\n');
+                            if (sig.Comment.Length > 0)
                             {
-                                main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                for (int i = 0; i < sigcom.Count(); i++)
+                                {
+                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                }
                             }
                         }
                         main_msg += "\t\t\t\t */\n";
@@ -244,12 +255,15 @@ namespace D2CC
                         {
                             main_msg += "\t\t\t\t/**\n";
                             main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 8-bit length.\n";
-                            sigcom = sig.Comment.Split('\n');
-                            if (sig.Comment.Length > 0)
+                            if (sig.Comment != null)
                             {
-                                for (int i = 0; i < sigcom.Count(); i++)
+                                sigcom = sig.Comment.Split('\n');
+                                if (sig.Comment.Length > 0)
                                 {
-                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    for (int i = 0; i < sigcom.Count(); i++)
+                                    {
+                                        main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    }
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
@@ -259,12 +273,15 @@ namespace D2CC
                         {
                             main_msg += "\t\t\t\t/** \n";
                             main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 16-bit length.\n";
-                            sigcom = sig.Comment.Split('\n');
-                            if (sig.Comment.Length > 0)
+                            if (sig.Comment != null)
                             {
-                                for (int i = 0; i < sigcom.Count(); i++)
+                                sigcom = sig.Comment.Split('\n');
+                                if (sig.Comment.Length > 0)
                                 {
-                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    for (int i = 0; i < sigcom.Count(); i++)
+                                    {
+                                        main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    }
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
@@ -274,12 +291,15 @@ namespace D2CC
                         {
                             main_msg += "\t\t\t\t/** \n";
                             main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 32-bit length.\n";
-                            sigcom = sig.Comment.Split('\n');
-                            if (sig.Comment.Length > 0)
+                            if (sig.Comment != null)
                             {
-                                for (int i = 0; i < sigcom.Count(); i++)
+                                sigcom = sig.Comment.Split('\n');
+                                if (sig.Comment.Length > 0)
                                 {
-                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    for (int i = 0; i < sigcom.Count(); i++)
+                                    {
+                                        main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    }
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
@@ -289,12 +309,15 @@ namespace D2CC
                         {
                             main_msg += "\t\t\t\t/** \n";
                             main_msg += "\t\t\t\t * @brief " + sig.Name + " signal with 64-bit length.\n";
-                            sigcom = sig.Comment.Split('\n');
-                            if (sig.Comment.Length > 0)
+                            if (sig.Comment != null)
                             {
-                                for (int i = 0; i < sigcom.Count(); i++)
+                                sigcom = sig.Comment.Split('\n');
+                                if (sig.Comment.Length > 0)
                                 {
-                                    main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    for (int i = 0; i < sigcom.Count(); i++)
+                                    {
+                                        main_msg += $"\t\t\t\t * {sigcom[i]}\n";
+                                    }
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
@@ -495,7 +518,14 @@ namespace D2CC
         var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
         foreach (var sig in sortedSignals)
         {
-            main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = PHYS_TO_RAW(0,&dbc->"+ msg.Name+"."+sig.Name+".Phys_Value);\n";
+            if((sig.Factor != 1) || (sig.Offset != 0))
+            {
+                main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = PHYS_TO_RAW(0,&dbc->"+ msg.Name+"."+sig.Name+".Phys_Value);\n";
+            }
+            else
+            {
+                main_msg += "\tdbc->" + msg.Name + ".Signal." + sig.Name + " = 0;\n";
+            }
         }
         main_msg += "\n}";
     }
