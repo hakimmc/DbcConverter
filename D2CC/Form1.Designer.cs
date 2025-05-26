@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             panel1 = new Panel();
+            ByteOrderCheckBox = new CheckBox();
             fileaddress = new Label();
             filename = new Label();
             AddDbcFile_Button = new Button();
@@ -37,25 +38,38 @@
             button2 = new Button();
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
-            label1 = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
+            panel1.Controls.Add(ByteOrderCheckBox);
             panel1.Controls.Add(fileaddress);
             panel1.Controls.Add(filename);
             panel1.Controls.Add(AddDbcFile_Button);
-            panel1.Location = new Point(12, 23);
+            panel1.Location = new Point(1, -3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(257, 78);
+            panel1.Size = new Size(273, 104);
             panel1.TabIndex = 0;
+            // 
+            // ByteOrderCheckBox
+            // 
+            ByteOrderCheckBox.AutoSize = true;
+            ByteOrderCheckBox.Checked = true;
+            ByteOrderCheckBox.CheckState = CheckState.Checked;
+            ByteOrderCheckBox.ForeColor = SystemColors.ControlLightLight;
+            ByteOrderCheckBox.Location = new Point(13, 78);
+            ByteOrderCheckBox.Name = "ByteOrderCheckBox";
+            ByteOrderCheckBox.Size = new Size(136, 19);
+            ByteOrderCheckBox.TabIndex = 6;
+            ByteOrderCheckBox.Text = "is Intel / Little Endian";
+            ByteOrderCheckBox.UseVisualStyleBackColor = true;
             // 
             // fileaddress
             // 
             fileaddress.AutoSize = true;
             fileaddress.ForeColor = SystemColors.ControlLightLight;
-            fileaddress.Location = new Point(3, 53);
+            fileaddress.Location = new Point(13, 60);
             fileaddress.Name = "fileaddress";
             fileaddress.Size = new Size(66, 15);
             fileaddress.TabIndex = 5;
@@ -65,7 +79,7 @@
             // 
             filename.AutoSize = true;
             filename.ForeColor = SystemColors.ControlLightLight;
-            filename.Location = new Point(3, 29);
+            filename.Location = new Point(13, 40);
             filename.Name = "filename";
             filename.Size = new Size(66, 15);
             filename.TabIndex = 4;
@@ -73,7 +87,7 @@
             // 
             // AddDbcFile_Button
             // 
-            AddDbcFile_Button.Location = new Point(3, 0);
+            AddDbcFile_Button.Location = new Point(11, 15);
             AddDbcFile_Button.Name = "AddDbcFile_Button";
             AddDbcFile_Button.Size = new Size(251, 23);
             AddDbcFile_Button.TabIndex = 3;
@@ -83,9 +97,9 @@
             // 
             // button1
             // 
-            button1.Location = new Point(15, 107);
+            button1.Location = new Point(12, 103);
             button1.Name = "button1";
-            button1.Size = new Size(115, 23);
+            button1.Size = new Size(125, 23);
             button1.TabIndex = 6;
             button1.Text = "Save .h file";
             button1.UseVisualStyleBackColor = true;
@@ -93,9 +107,9 @@
             // 
             // button2
             // 
-            button2.Location = new Point(156, 107);
+            button2.Location = new Point(143, 103);
             button2.Name = "button2";
-            button2.Size = new Size(113, 23);
+            button2.Size = new Size(120, 23);
             button2.TabIndex = 7;
             button2.Text = "Save .c file";
             button2.UseVisualStyleBackColor = true;
@@ -105,23 +119,12 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.ForeColor = SystemColors.ControlLightLight;
-            label1.Location = new Point(12, 5);
-            label1.Name = "label1";
-            label1.Size = new Size(148, 15);
-            label1.TabIndex = 8;
-            label1.Text = "Dbc To C Library Converter";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ActiveCaptionText;
-            ClientSize = new Size(275, 140);
-            Controls.Add(label1);
+            ClientSize = new Size(275, 136);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(panel1);
@@ -130,12 +133,12 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "D2CC";
             Load += Form1_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -148,6 +151,6 @@
         private Button button2;
         private OpenFileDialog openFileDialog1;
         private SaveFileDialog saveFileDialog1;
-        private Label label1;
+        private CheckBox ByteOrderCheckBox;
     }
 }

@@ -1,0 +1,96 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|c:\\users\\arge13\\documents\\d2cc\\dbcconverter\\d2cc\\d2cc.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|solutionrelative:d2cc\\d2cc.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\d2cc\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|solutionrelative:d2cc\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|c:\\users\\arge13\\documents\\d2cc\\dbcconverter\\d2cc\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|solutionrelative:d2cc\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|c:\\users\\arge13\\documents\\d2cc\\dbcconverter\\d2cc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|solutionrelative:d2cc\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|c:\\users\\arge13\\documents\\d2cc\\dbcconverter\\d2cc\\d2cc.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{D41CB5A3-2F32-4DF1-9F55-4532EC3E0BF5}|D2CC\\D2CC.csproj|solutionrelative:d2cc\\d2cc.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 54,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\Program.cs",
+              "RelativeDocumentMoniker": "D2CC\\Program.cs",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\Program.cs",
+              "RelativeToolTip": "D2CC\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-22T14:39:32.888Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\Form1.cs",
+              "RelativeDocumentMoniker": "D2CC\\Form1.cs",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\Form1.cs",
+              "RelativeToolTip": "D2CC\\Form1.cs",
+              "ViewState": "AgIAANcAAAAAAAAAAAAiwOIAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T06:44:29.636Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.cs [Tasar\u0131m]",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\Form1.cs",
+              "RelativeDocumentMoniker": "D2CC\\Form1.cs",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\Form1.cs [Tasar\u0131m]",
+              "RelativeToolTip": "D2CC\\Form1.cs [Tasar\u0131m]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T06:44:30.124Z",
+              "EditorCaption": " [Tasar\u0131m]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "D2CC.csproj",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
+              "RelativeDocumentMoniker": "D2CC\\D2CC.csproj",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
+              "RelativeToolTip": "D2CC\\D2CC.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-12-23T06:44:30.127Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "D2CC",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
+              "RelativeDocumentMoniker": "D2CC\\D2CC.csproj",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
+              "RelativeToolTip": "D2CC\\D2CC.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-12-23T06:44:30.162Z"
+            }
+  

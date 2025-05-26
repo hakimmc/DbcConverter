@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "fJGFgTZD8tk=",
+  "dgSpecHash": "/zTRxswDSF4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\D2CC.csproj",
+  "projectFilePath": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fvzdr\\.nuget\\packages\\dbcparserlib\\1.5.0\\dbcparserlib.1.5.0.nupkg.sha512",
-    "C:\\Users\\fvzdr\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\8.0.7\\microsoft.netcore.app.runtime.win-x64.8.0.7.nupkg.sha512",
-    "C:\\Users\\fvzdr\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\8.0.7\\microsoft.windowsdesktop.app.runtime.win-x64.8.0.7.nupkg.sha512",
-    "C:\\Users\\fvzdr\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\8.0.7\\microsoft.aspnetcore.app.runtime.win-x64.8.0.7.nupkg.sha512"
+    "C:\\Users\\ARGE13\\.nuget\\packages\\dbcparserlib\\1.5.0\\dbcparserlib.1.5.0.nupkg.sha512",
+    "C:\\Users\\ARGE13\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\8.0.14\\microsoft.netcore.app.runtime.win-x64.8.0.14.nupkg.sha512",
+    "C:\\Users\\ARGE13\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\8.0.14\\microsoft.windowsdesktop.app.runtime.win-x64.8.0.14.nupkg.sha512",
+    "C:\\Users\\ARGE13\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\8.0.14\\microsoft.aspnetcore.app.runtime.win-x64.8.0.14.nupkg.sha512"
   ],
   "logs": []
 }

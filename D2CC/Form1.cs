@@ -103,8 +103,10 @@ namespace D2CC
                 MessageBox.Show("Source File (.c) saved on " + save.FileName + ".", "Succesfull!", MessageBoxButtons.OK, MessageBoxIcon.Information); ;
             }
         }
+        bool IsIntel;
         private string make_h_file2(string filePath)
         {
+            IsIntel = ByteOrderCheckBox.Checked;
             string[] sigcom;
             string main_msg = string.Empty;
             var dbc = Parser.ParseFromPath(filePath);
@@ -221,7 +223,21 @@ namespace D2CC
                 main_msg += " */\n";
                 main_msg += start_line_msg(msg.Name);
 
-                var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
+                //var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit); // REMOVED AT 26.05.2025 FOR ABOUT INTEL/MOTOROLA BYTE ENDIAN ERRORS
+                var sortedSignals = msg.Signals.OrderBy(sig =>
+                {
+                    
+                    if (IsIntel) // Intel
+                    {
+                        int byteIndex = sig.StartBit / 8;
+                        int bitIndex = sig.StartBit % 8;
+                        return (byteIndex * 8) + (7 - bitIndex);
+                    }
+                    else // Motorola
+                    {
+                        return sig.StartBit;
+                    }
+                });
                 main_msg += "\tstruct{\n";
 
                 // Union for signal values
@@ -267,7 +283,8 @@ namespace D2CC
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
-                            main_msg += "\t\t\t\tuint8_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            //main_msg += "\t\t\t\tuint8_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint8_t " + sig.Name + (sig.Length != 8 ? (":" + sig.Length) : "") + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 16)
                         {
@@ -285,7 +302,8 @@ namespace D2CC
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
-                            main_msg += "\t\t\t\tuint16_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            //main_msg += "\t\t\t\tuint16_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint16_t " + sig.Name + (sig.Length != 16 ? (":" + sig.Length) : "") + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 32)
                         {
@@ -303,7 +321,8 @@ namespace D2CC
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
-                            main_msg += "\t\t\t\tuint32_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            //main_msg += "\t\t\t\tuint32_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint32_t " + sig.Name + (sig.Length != 32 ? (":" + sig.Length) : "") + "; //" + sig.Length + " bit\n";
                         }
                         else if (sig.Length <= 64)
                         {
@@ -321,7 +340,8 @@ namespace D2CC
                                 }
                             }
                             main_msg += "\t\t\t\t */\n";
-                            main_msg += "\t\t\t\tuint64_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            //main_msg += "\t\t\t\tuint64_t " + sig.Name + ":" + sig.Length + "; //" + sig.Length + " bit\n";
+                            main_msg += "\t\t\t\tuint64_t " + sig.Name + (sig.Length != 64 ? (":" + sig.Length) : "") + "; //" + sig.Length + " bit\n";
                         }
                     }
                 }

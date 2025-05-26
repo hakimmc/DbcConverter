@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\D2CC.csproj": {}
+    "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj": {}
   },
   "projects": {
-    "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\D2CC.csproj": {
+    "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\D2CC.csproj",
+        "projectUniqueName": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
         "projectName": "D2CC",
-        "projectPath": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\D2CC.csproj",
-        "packagesPath": "C:\\Users\\fvzdr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fvzdr\\OneDrive\\Belgeler\\Github\\DbcConverter\\D2CC\\obj\\publish\\win-x64\\",
+        "projectPath": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\D2CC.csproj",
+        "packagesPath": "C:\\Users\\ARGE13\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ARGE13\\Documents\\D2CC\\DbcConverter\\D2CC\\obj\\publish\\win-x64\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\fvzdr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ARGE13\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -68,15 +69,15 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-              "version": "[8.0.7, 8.0.7]"
+              "version": "[8.0.14, 8.0.14]"
             },
             {
               "name": "Microsoft.NETCore.App.Runtime.win-x64",
-              "version": "[8.0.7, 8.0.7]"
+              "version": "[8.0.14, 8.0.14]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
-              "version": "[8.0.7, 8.0.7]"
+              "version": "[8.0.14, 8.0.14]"
             }
           ],
           "frameworkReferences": {
@@ -87,7 +88,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {
