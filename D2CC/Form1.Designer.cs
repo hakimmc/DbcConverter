@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             panel1 = new Panel();
+            Languagecsharp = new CheckBox();
             Language_C = new CheckBox();
             Language_Cpp = new CheckBox();
             ByteOrderCheckBox = new CheckBox();
@@ -45,6 +46,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(Languagecsharp);
             panel1.Controls.Add(Language_C);
             panel1.Controls.Add(Language_Cpp);
             panel1.Controls.Add(ByteOrderCheckBox);
@@ -55,6 +57,18 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(273, 104);
             panel1.TabIndex = 0;
+            // 
+            // Languagecsharp
+            // 
+            Languagecsharp.AutoSize = true;
+            Languagecsharp.ForeColor = SystemColors.ControlLightLight;
+            Languagecsharp.Location = new Point(220, 56);
+            Languagecsharp.Name = "Languagecsharp";
+            Languagecsharp.Size = new Size(41, 19);
+            Languagecsharp.TabIndex = 9;
+            Languagecsharp.Text = "C#";
+            Languagecsharp.UseVisualStyleBackColor = true;
+            Languagecsharp.CheckedChanged += Languagecsharp_CheckedChanged;
             // 
             // Language_C
             // 
@@ -184,5 +198,6 @@
         private CheckBox ByteOrderCheckBox;
         private CheckBox Language_C;
         private CheckBox Language_Cpp;
+        private CheckBox Languagecsharp;
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -33,10 +34,11 @@ namespace D2CC
                 {
                     safeFileAddress = openFileDialog1.FileName;
                     toolTip1.SetToolTip(fileaddress, openFileDialog1.FileName);
-                    fileaddress.Text = openFileDialog1.FileName.Length>22? openFileDialog1.FileName.Substring(0,20)+".." : openFileDialog1.FileName;
+                    fileaddress.Text = openFileDialog1.FileName.Length > 22 ? openFileDialog1.FileName.Substring(0, 20) + ".." : openFileDialog1.FileName;
                     filename.Text = openFileDialog1.SafeFileName;
                     openFileDialog1.InitialDirectory = @"" + fileaddress.Text;
                     button1.Enabled = true;
+                    button2.Enabled = true;
                     if (File.Exists(fileaddress.Text))
                     {
                         //LoadDbc(fileaddress.Text);
@@ -74,7 +76,7 @@ namespace D2CC
         {
             SaveFileDialog save = new SaveFileDialog();
             save.RestoreDirectory = true;
-            save.FileName = FormatFileName(filename.Text)+".h";
+            save.FileName = FormatFileName(filename.Text) + ".h";
             save.OverwritePrompt = false;
             save.CreatePrompt = true;
             save.Title = "C Header File";
@@ -97,15 +99,18 @@ namespace D2CC
             save.RestoreDirectory = true;
             save.OverwritePrompt = false;
             save.CreatePrompt = true;
-            save.Title = Language_Cpp.Checked ? "Cpp Source File": "C Source File";
+            save.Title = Language_Cpp.Checked ? "Cpp Source File" : "C Source File";
+            save.Title = Languagecsharp.Checked ? "C# Class File" : "C Source File";
             save.DefaultExt = "c";
             save.Filter = Language_Cpp.Checked ? "Cpp Source File (*.cpp)|*.cpp" : "C Source File (*.c)|*.c";
-            save.FileName = FormatFileName(filename.Text) +".c"+(Language_Cpp.Checked?"pp":"");
+            save.Filter = Languagecsharp.Checked ? "C# Class File (*.cs)|*.cs" : "C Source File (*.c)|*.c";
+
+            save.FileName = FormatFileName(filename.Text) + ".c" + (Language_Cpp.Checked ? "pp" : ( Languagecsharp.Checked ? "s" : ""));
             if (save.ShowDialog() == DialogResult.OK)
             {
                 StreamWriter Kayit = new StreamWriter(save.FileName);
                 save_file_name = save.FileName;
-                Kayit.WriteLine(Language_Cpp.Checked? make_cpp_file2(safeFileAddress) : make_c_file2(safeFileAddress));
+                Kayit.WriteLine(Language_Cpp.Checked ? make_cpp_file2(safeFileAddress) : ( Languagecsharp.Checked ? generate_cs_code(safeFileAddress) : make_c_file2(safeFileAddress)));
                 Kayit.Close();
                 MessageBox.Show("Source File (.c) saved on " + save.FileName + ".", "Succesfull!", MessageBoxButtons.OK, MessageBoxIcon.Information); ;
             }
@@ -118,7 +123,7 @@ namespace D2CC
             string main_msg = string.Empty;
             var dbc = Parser.ParseFromPath(filePath);
             main_msg += "/**\n" +
-            " * @file "+FormatFileName(filename.Text)+".h\n" +
+            " * @file " + FormatFileName(filename.Text) + ".h\n" +
             " * @brief Header file for the D2CC library.\n" +
             " * \n" +
             " * @date " + DateTime.Now.Date.ToString("yyyy-MM-dd") + "\n" +
@@ -387,36 +392,36 @@ namespace D2CC
 
             // End Doxygen comment for the main structure
             //main_msg += "}DbcStruct;\n";
-            main_msg += "}"+FormatFileName(filename.Text)+";\n";
-            
+            main_msg += "}" + FormatFileName(filename.Text) + ";\n";
+
             main_msg += "/*______USER CODE FUNCTION BLOCK START______*/\n";
 
             main_msg += $"\n/**\n";
-            main_msg += " * @brief Initializes the "+FormatFileName(filename.Text)+" for CAN message processing.\n";
+            main_msg += " * @brief Initializes the " + FormatFileName(filename.Text) + " for CAN message processing.\n";
             main_msg += " *\n";
-            main_msg += " * This function should be called before using the "+FormatFileName(filename.Text)+" to ensure that all\n";
+            main_msg += " * This function should be called before using the " + FormatFileName(filename.Text) + " to ensure that all\n";
             main_msg += " * message structures are properly initialized. It sets up necessary memory and \n";
             main_msg += " * configurations.\n";
             main_msg += " *\n";
-            main_msg += " * @param[in] st Pointer to the "+FormatFileName(filename.Text)+" instance that will be initialized.\n";
+            main_msg += " * @param[in] st Pointer to the " + FormatFileName(filename.Text) + " instance that will be initialized.\n";
             main_msg += " */\n";
-            main_msg += $"\nvoid "+FormatFileName(filename.Text)+"_Lib_Init(" +FormatFileName(filename.Text)+" *st); //Init Function (Must Be Run)\n";
+            main_msg += $"\nvoid " + FormatFileName(filename.Text) + "_Lib_Init(" + FormatFileName(filename.Text) + " *st); //Init Function (Must Be Run)\n";
 
             main_msg += $"\n#ifdef READ_ENABLE\n";
             main_msg += $"/**\n";
             main_msg += " * @brief Reads and parses CAN data.\n";
             main_msg += " *\n";
             main_msg += " * This function reads CAN data from the provided `rx_data` and parses it into the \n";
-            main_msg += " * corresponding message and signal structures in the "+FormatFileName(filename.Text)+". It uses the CAN \n";
+            main_msg += " * corresponding message and signal structures in the " + FormatFileName(filename.Text) + ". It uses the CAN \n";
             main_msg += " * message ID to identify the message to parse.\n";
             main_msg += " *\n";
             main_msg += " * This function is only enabled if `READ_ENABLE` is defined.\n";
             main_msg += " *\n";
             main_msg += " * @param[in] rx_data Pointer to the received CAN data.\n";
             main_msg += " * @param[in] id The CAN message ID that is used to determine which message to parse.\n";
-            main_msg += " * @param[in,out] st Pointer to the "+FormatFileName(filename.Text)+" instance where the parsed data will be stored.\n";
+            main_msg += " * @param[in,out] st Pointer to the " + FormatFileName(filename.Text) + " instance where the parsed data will be stored.\n";
             main_msg += " */\n";
-            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, "+FormatFileName(filename.Text)+" *st); //Can Read & Parse Function\n";
+            main_msg += $"\nvoid ReadParse(uint8_t* rx_data, uint32_t id, " + FormatFileName(filename.Text) + " *st); //Can Read & Parse Function\n";
             main_msg += $"\n#endif\n";
 
             foreach (var msg in sortedmsgs)
@@ -428,9 +433,9 @@ namespace D2CC
                 main_msg += " * organizes and prepares the signals in the message to be ready for processing \n";
                 main_msg += " * or encoding.\n";
                 main_msg += " *\n";
-                main_msg += " * @param[in] dbc Pointer to the "+FormatFileName(filename.Text)+" instance that contains the CAN message.\n";
+                main_msg += " * @param[in] dbc Pointer to the " + FormatFileName(filename.Text) + " instance that contains the CAN message.\n";
                 main_msg += " */\n";
-                main_msg += $"\nvoid CreateTable_{msg.Name}("+FormatFileName(filename.Text)+" *dbc);\n";
+                main_msg += $"\nvoid CreateTable_{msg.Name}(" + FormatFileName(filename.Text) + " *dbc);\n";
             }
 
             main_msg += $"\n/**\n";
@@ -466,11 +471,10 @@ namespace D2CC
             main_msg += "#ifdef __cplusplus\r\n";
             main_msg += "}\r\n";
             main_msg += "#endif\r\n";
-            
+
             main_msg += "#endif";
             return main_msg;
         }
-
         private string make_c_file2(string filePath)
         {
             string main_msg = string.Empty;
@@ -478,7 +482,7 @@ namespace D2CC
 
 
             main_msg += "/**\n" +
-                " * @file "+FormatFileName(filename.Text)+".c\n" +
+                " * @file " + FormatFileName(filename.Text) + ".c\n" +
                 " * @brief Source file for the D2CC library.\n" +
                 " * \n" +
                 " * @date " + DateTime.Now.Date.ToString("yyyy-MM-dd") + "\n" +
@@ -486,20 +490,20 @@ namespace D2CC
                 " * @see https://www.linkedin.com/in/abdulhakim-calgin/\n" +
                 " */\n\n";
             //main_msg += "/*\r\n *  d2cc_lib.c\r\n *\r\n *  Created on: " + DateTime.Now.Date.ToString().TrimEnd('0', ':') + "\r\n *  Author: hakimmc\r\n *\n *  https://www.linkedin.com/in/abdulhakim-calgin/\r\n *\n */\n\n";
-            main_msg += "#include \"" + FormatFileName(filename.Text)+ ".h\"\n\n";
+            main_msg += "#include \"" + FormatFileName(filename.Text) + ".h\"\n\n";
 
             var sortedmsgs = dbc.Messages.OrderBy(messages => messages.Name);
 
             UInt16 indx = 0;
 
-            main_msg += "\n/**\r\n * @brief Initializes the "+FormatFileName(filename.Text)+" with values from the parsed DBC file.\r\n"
+            main_msg += "\n/**\r\n * @brief Initializes the " + FormatFileName(filename.Text) + " with values from the parsed DBC file.\r\n"
                         + " *\r\n"
-                        + " * This function initializes the necessary fields in the "+FormatFileName(filename.Text)+" based on the provided DBC messages.\r\n"
+                        + " * This function initializes the necessary fields in the " + FormatFileName(filename.Text) + " based on the provided DBC messages.\r\n"
                         + " * The signals' physical factors and offsets are set accordingly.\r\n"
                         + " *\r\n"
-                        + " * @param[in] dbc Pointer to the "+FormatFileName(filename.Text)+" instance to be initialized.\r\n"
+                        + " * @param[in] dbc Pointer to the " + FormatFileName(filename.Text) + " instance to be initialized.\r\n"
                         + " */\n";
-            main_msg += "\nvoid "+FormatFileName(filename.Text)+"_Lib_Init(" + FormatFileName(filename.Text)+" *dbc){\n";
+            main_msg += "\nvoid " + FormatFileName(filename.Text) + "_Lib_Init(" + FormatFileName(filename.Text) + " *dbc){\n";
 
             foreach (var msg in sortedmsgs)
             {
@@ -519,16 +523,16 @@ namespace D2CC
 
             indx = 0;
 
-            main_msg += "\n/**\r\n * @brief Reads and parses CAN data into the "+FormatFileName(filename.Text)+".\r\n"
+            main_msg += "\n/**\r\n * @brief Reads and parses CAN data into the " + FormatFileName(filename.Text) + ".\r\n"
                         + " *\r\n"
-                        + " * This function is used to read CAN data and store it in the "+FormatFileName(filename.Text)+". It parses the data and converts\r\n"
-                        + " * physical values to raw CAN signal values based on the scaling factors and offsets defined in the "+FormatFileName(filename.Text)+".\r\n"
+                        + " * This function is used to read CAN data and store it in the " + FormatFileName(filename.Text) + ". It parses the data and converts\r\n"
+                        + " * physical values to raw CAN signal values based on the scaling factors and offsets defined in the " + FormatFileName(filename.Text) + ".\r\n"
                         + " *\r\n"
                         + " * @param[in] rx_data Pointer to the received CAN data to be parsed.\r\n"
                         + " * @param[in] id CAN message ID for identifying which message to parse.\r\n"
-                        + " * @param[in,out] dbc Pointer to the "+FormatFileName(filename.Text)+" where parsed data will be stored.\r\n"
+                        + " * @param[in,out] dbc Pointer to the " + FormatFileName(filename.Text) + " where parsed data will be stored.\r\n"
                         + " */\n";
-            main_msg += $"\n#ifdef READ_ENABLE\nvoid ReadParse(uint8_t* rx_data, uint32_t id, "+FormatFileName(filename.Text)+" *dbc)";
+            main_msg += $"\n#ifdef READ_ENABLE\nvoid ReadParse(uint8_t* rx_data, uint32_t id, " + FormatFileName(filename.Text) + " *dbc)";
 
             main_msg += "{\r\n    switch (id) {\n\n";
             foreach (var msg in sortedmsgs)
@@ -549,16 +553,16 @@ namespace D2CC
             }
             main_msg += "\t}\n}\n#endif";
 
-            main_msg += "\n/**\r\n * @brief Creates the signal table for a specified CAN message in the "+FormatFileName(filename.Text)+".\r\n"
+            main_msg += "\n/**\r\n * @brief Creates the signal table for a specified CAN message in the " + FormatFileName(filename.Text) + ".\r\n"
                         + " *\r\n"
-                        + " * This function initializes the signal table for a specific message within the "+FormatFileName(filename.Text)+". Each signal is \r\n"
+                        + " * This function initializes the signal table for a specific message within the " + FormatFileName(filename.Text) + ". Each signal is \r\n"
                         + " * set to 0 initially, preparing it for further use.\r\n"
                         + " *\r\n"
-                        + " * @param[in] dbc Pointer to the "+FormatFileName(filename.Text)+" containing the CAN message and signals.\r\n"
+                        + " * @param[in] dbc Pointer to the " + FormatFileName(filename.Text) + " containing the CAN message and signals.\r\n"
                         + " */\n";
             foreach (var msg in sortedmsgs)
             {
-                main_msg += $"\nvoid CreateTable_{msg.Name}("+FormatFileName(filename.Text)+" *dbc)\n";
+                main_msg += $"\nvoid CreateTable_{msg.Name}(" + FormatFileName(filename.Text) + " *dbc)\n";
                 main_msg += "{\n";
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
                 foreach (var sig in sortedSignals)
@@ -601,14 +605,13 @@ namespace D2CC
 
             return main_msg;
         }
-
         private string make_cpp_file2(string filePath)
         {
             string main_msg = string.Empty;
             var dbc = Parser.ParseFromPath(filePath);
 
             main_msg += "/**\n" +
-                " * @file "+FormatFileName(filename.Text)+".cpp\n" +
+                " * @file " + FormatFileName(filename.Text) + ".cpp\n" +
                 " * @brief Source file for the D2CC library (C++ compatible).\n" +
                 " * \n" +
                 " * @date " + DateTime.Now.Date.ToString("yyyy-MM-dd") + "\n" +
@@ -616,11 +619,11 @@ namespace D2CC
                 " * @see https://www.linkedin.com/in/abdulhakim-calgin/\n" +
                 " */\n\n";
 
-            main_msg += "#include \""+FormatFileName(filename.Text)+ ".h\"\n\n";
+            main_msg += "#include \"" + FormatFileName(filename.Text) + ".h\"\n\n";
 
             var sortedmsgs = dbc.Messages.OrderBy(messages => messages.Name);
 
-            main_msg += "\nvoid "+FormatFileName(filename.Text)+"_Lib_Init(DbcStruct *dbc) {\n";
+            main_msg += "\nvoid " + FormatFileName(filename.Text) + "_Lib_Init(DbcStruct *dbc) {\n";
             foreach (var msg in sortedmsgs)
             {
                 var sortedSignals = msg.Signals.OrderBy(sig => sig.StartBit);
@@ -690,32 +693,106 @@ namespace D2CC
 
             return main_msg;
         }
-
-
-        private int find_bitcount_to_maxvalue(int bitcount)
+        private string generate_cs_code(string filePath)
         {
-            int toplam_value = 0;
-            for (int i = 0; i < bitcount; i++)
+            var dbc = Parser.ParseFromPath(filePath);
+            var sb = new StringBuilder();
+            sb.AppendLine("/// <summary>");
+            sb.AppendLine("/// Source file for the D2CC library (C# compatible).");
+            sb.AppendLine("/// </summary>");
+            sb.AppendLine("/// <remarks>");
+            sb.AppendLine("/// File: " + FormatFileName(filename.Text) + ".cs");
+            sb.AppendLine("/// Date: " + DateTime.Now.ToString("yyyy-MM-dd"));
+            sb.AppendLine("/// Author: hakimmc");
+            sb.AppendLine("/// See: https://www.linkedin.com/in/abdulhakim-calgin/");
+            sb.AppendLine("/// </remarks>");
+            sb.AppendLine();
+            sb.AppendLine("using System;");
+            sb.AppendLine("namespace DbcAutoGenerated");
+            sb.AppendLine("{");
+            sb.AppendLine("    public class Phys_Value_t { public float factor; public float offset; public float value; }");
+            sb.AppendLine($"    public class {FormatFileName(filename.Text)}");
+            sb.AppendLine("    {");
+
+            foreach (var msg in dbc.Messages.OrderBy(m => m.Name))
             {
-                toplam_value += 1 << i;
+                sb.AppendLine($"        public class {msg.Name}_Message");
+                sb.AppendLine("        {");
+                sb.AppendLine($"            public byte[] Data = new byte[{msg.DLC}];");
+
+                foreach (var sig in msg.Signals.OrderBy(s => s.StartBit))
+                {
+                    string propName = sig.Name;
+                    int startBit = sig.StartBit;
+                    int length = sig.Length;
+                    bool isIntel = sig.ByteOrder == 1;
+                    string endianness = isIntel ? "Intel" : "Motorola";
+
+                    sb.AppendLine();
+                    sb.AppendLine($"            /// <summary>");
+                    sb.AppendLine($"            /// {propName} ({length} bit) - {endianness} endian");
+                    if (!string.IsNullOrWhiteSpace(sig.Comment))
+                        sb.AppendLine($"            /// {sig.Comment}");
+                    sb.AppendLine($"            /// </summary>");
+                    sb.AppendLine($"            public uint {propName}");
+                    sb.AppendLine("            {");
+                    sb.AppendLine("                get");
+                    sb.AppendLine("                {");
+                    sb.AppendLine($"                    return BitFieldHelper.ExtractSignal(Data, {startBit}, {length}, {isIntel.ToString().ToLower()});");
+                    sb.AppendLine("                }");
+                    sb.AppendLine("                set");
+                    sb.AppendLine("                {");
+                    sb.AppendLine($"                    BitFieldHelper.InsertSignal(Data, {startBit}, {length}, value, {isIntel.ToString().ToLower()});");
+                    sb.AppendLine("                }");
+                    sb.AppendLine("            }");
+                }
+
+                sb.AppendLine("        }");
+                sb.AppendLine($"        public {msg.Name}_Message {msg.Name} = new {msg.Name}_Message();");
+                sb.AppendLine();
             }
-            return toplam_value;
-        }
-        int rx_data_index = 0;
 
-        private string get_rxdataindex(int lengthbit)
-        {
-            if (0 < lengthbit && lengthbit < 9) { rx_data_index = 0; return "rx_data[0]"; }
-            if (8 < lengthbit && lengthbit < 17) { rx_data_index = 1; return "rx_data[1]"; }
-            if (16 < lengthbit && lengthbit < 25) { rx_data_index = 2; return "rx_data[2]"; }
-            if (24 < lengthbit && lengthbit < 33) { rx_data_index = 3; return "rx_data[3]"; }
-            if (32 < lengthbit && lengthbit < 41) { rx_data_index = 4; return "rx_data[4]"; }
-            if (40 < lengthbit && lengthbit < 49) { rx_data_index = 5; return "rx_data[5]"; }
-            if (48 < lengthbit && lengthbit < 57) { rx_data_index = 6; return "rx_data[6]"; }
-            if (56 < lengthbit && lengthbit < 65) { rx_data_index = 7; return "rx_data[7]"; }
-            return null;
-        }
+            sb.AppendLine("    }");
 
+            // Static helper bitfield methods
+            sb.AppendLine("    public static class BitFieldHelper");
+            sb.AppendLine("    {");
+            sb.AppendLine("        public static uint ExtractSignal(byte[] data, int startBit, int length, bool isIntel)");
+            sb.AppendLine("        {");
+            sb.AppendLine("            int byteLength = (length + 7) / 8;");
+            sb.AppendLine("            ulong raw = 0;");
+            sb.AppendLine("            for (int i = 0; i < data.Length; i++) raw |= ((ulong)data[i]) << (8 * i);");
+            sb.AppendLine("            if (!isIntel) raw = SwapEndian(raw, data.Length);");
+            sb.AppendLine("            ulong mask = ((1UL << length) - 1UL);");
+            sb.AppendLine("            ulong shifted = raw >> startBit;");
+            sb.AppendLine("            return (uint)(shifted & mask);");
+            sb.AppendLine("        }");
+
+            sb.AppendLine("        public static void InsertSignal(byte[] data, int startBit, int length, uint value, bool isIntel)");
+            sb.AppendLine("        {");
+            sb.AppendLine("            ulong raw = 0;");
+            sb.AppendLine("            for (int i = 0; i < data.Length; i++) raw |= ((ulong)data[i]) << (8 * i);");
+            sb.AppendLine("            ulong mask = ((1UL << length) - 1UL) << startBit;");
+            sb.AppendLine("            raw = (raw & ~mask) | (((ulong)value << startBit) & mask);");
+            sb.AppendLine("            if (!isIntel) raw = SwapEndian(raw, data.Length);");
+            sb.AppendLine("            for (int i = 0; i < data.Length; i++) data[i] = (byte)((raw >> (8 * i)) & 0xFF);");
+            sb.AppendLine("        }");
+
+            sb.AppendLine("        private static ulong SwapEndian(ulong value, int length)");
+            sb.AppendLine("        {");
+            sb.AppendLine("            ulong result = 0;");
+            sb.AppendLine("            for (int i = 0; i < length; i++)");
+            sb.AppendLine("            {");
+            sb.AppendLine("                result |= ((value >> (8 * i)) & 0xFF) << (8 * (length - 1 - i));");
+            sb.AppendLine("            }");
+            sb.AppendLine("            return result;");
+            sb.AppendLine("        }");
+            sb.AppendLine("    }");
+
+            sb.AppendLine("}");
+
+            return sb.ToString();
+        }
         public string fix_string(string word)
         {
             return word.Replace("@", "").Replace("/", "_").Replace(".", "_").Replace("-", "_").Replace("?", "").Replace(" ", "_");
@@ -723,12 +800,23 @@ namespace D2CC
 
         private void Language_C_CheckedChanged(object sender, EventArgs e)
         {
-            Language_Cpp.Checked = !Language_C.Checked;
+            if (Language_C.Checked)
+            {
+                Languagecsharp.Checked = false;
+                Language_Cpp.Checked = false;
+            }
+            button1.Enabled = true;
         }
 
         private void Language_Cpp_CheckedChanged(object sender, EventArgs e)
         {
-            Language_C.Checked = !Language_Cpp.Checked;
+            if (Language_Cpp.Checked)
+            {
+                Languagecsharp.Checked = false;
+                Language_C.Checked = false;
+            }
+            button1.Enabled = true;
+
         }
 
         public string FormatFileName(string filename)
@@ -744,6 +832,16 @@ namespace D2CC
             }
 
             return filename;
+        }
+
+        private void Languagecsharp_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Languagecsharp.Checked)
+            {
+                Language_Cpp.Checked = false;
+                Language_C.Checked = false;
+            }
+            button1.Enabled = false;
         }
     }
 }
