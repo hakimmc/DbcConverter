@@ -26,6 +26,7 @@ namespace D2CC
         bool state = false;
         System.Windows.Forms.ToolTip toolTip1;
         string safeFileAddress;
+        bool added_file = false;
         private void AddDbcFile_Button_Click(object sender, EventArgs e)
         {
             try
@@ -37,13 +38,20 @@ namespace D2CC
                     fileaddress.Text = openFileDialog1.FileName.Length > 22 ? openFileDialog1.FileName.Substring(0, 20) + ".." : openFileDialog1.FileName;
                     filename.Text = openFileDialog1.SafeFileName;
                     openFileDialog1.InitialDirectory = @"" + fileaddress.Text;
-                    button1.Enabled = true;
-                    button2.Enabled = true;
+                    added_file = true;
+                    button1.Enabled = added_file;
+                    button2.Enabled = added_file;
                     if (File.Exists(fileaddress.Text))
                     {
                         //LoadDbc(fileaddress.Text);
                         //MessageBox.Show(make_c_file(fileaddress.Text));
                     }
+                }
+                else if (filename.Text == "null")
+                {
+                    added_file = false;
+                    button1.Enabled = added_file;
+                    button2.Enabled = added_file;
                 }
             }
             catch (Exception ex)
@@ -805,7 +813,10 @@ namespace D2CC
                 Languagecsharp.Checked = false;
                 Language_Cpp.Checked = false;
             }
-            button1.Enabled = true;
+            if(added_file)
+            {
+                button1.Enabled = true;
+            }
         }
 
         private void Language_Cpp_CheckedChanged(object sender, EventArgs e)
@@ -815,7 +826,10 @@ namespace D2CC
                 Languagecsharp.Checked = false;
                 Language_C.Checked = false;
             }
-            button1.Enabled = true;
+            if (added_file)
+            {
+                button1.Enabled = true;
+            }
 
         }
 

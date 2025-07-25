@@ -1,3 +1,4 @@
-D2CC/obj/
-D2CC/bin/Debug/
-D2CC/bin/Release/
+D2CC/obj
+D2CC/bin
+Setup/D2CC_Setup/Debug
+Setup/D2CC_Setup/Release

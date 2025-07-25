@@ -30,8 +30,22 @@
       "DocumentGroups": [
         {
           "DockedWidth": 54,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\DbcConverter\\D2CC\\Form1.cs",
+              "RelativeDocumentMoniker": "D2CC\\Form1.cs",
+              "ToolTip": "C:\\Users\\ARGE13\\Documents\\DbcConverter\\D2CC\\Form1.cs",
+              "RelativeToolTip": "D2CC\\Form1.cs",
+              "ViewState": "AgIAACQDAAAAAAAAAAAgwDMDAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-23T06:44:29.636Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -42,19 +56,7 @@
               "RelativeToolTip": "D2CC\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-22T14:39:32.888Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\ARGE13\\Documents\\DbcConverter\\D2CC\\Form1.cs",
-              "RelativeDocumentMoniker": "D2CC\\Form1.cs",
-              "ToolTip": "C:\\Users\\ARGE13\\Documents\\DbcConverter\\D2CC\\Form1.cs",
-              "RelativeToolTip": "D2CC\\Form1.cs",
-              "ViewState": "AgIAAGgAAAAAAAAAAAAuwMQCAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-23T06:44:29.636Z",
+              "WhenOpened": "2025-01-22T14:39:32.888Z",
               "EditorCaption": ""
             },
             {
